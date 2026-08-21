@@ -85,7 +85,7 @@ The form has four sections. **Required** fields are marked below; everything els
 
 | Field | Required | What to put in it |
 | --- | --- | --- |
-| **Technical Activity Type** | — | Check **Code project**, **Specification**, or both. Check at least one — GitHub cannot enforce this for you. |
+| **Technical Activity Type** | ✅ | Check **Code project**, **Specification**, or both. Check at least one — GitHub cannot enforce this for you. |
 | **Pre-existing Repository** | | A link to the repository you want to bring in, if any. See [If you have an existing repository](#if-you-have-an-existing-repository). |
 | **Initial Committers** | ✅ | GitHub IDs as URLs, one per line. Names and affiliations are helpful but optional. |
 | **Sponsor** | | Optional. A sponsor must be a maintainer of an LFDT project, a TAC member, a GB member, or a SIG chair. They help you make connections in the community and help validate that the proposal is cogent and novel — no obligations beyond that initial support. |
