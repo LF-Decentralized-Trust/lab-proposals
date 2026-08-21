@@ -1,0 +1,277 @@
+---
+name: Lab Proposal
+description: Propose a new lab under LF Decentralized Trust (LFDT) Labs
+title: "[Lab Proposal] <Lab Name>"
+labels: ["New Proposal"]
+# assignees:
+#   - <lfdt-staff-github-handle>
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > Thanks for proposing a lab to [LF Decentralized Trust](https://www.lfdecentralizedtrust.org/). [LFDT Labs](https://www.lfdecentralizedtrust.org/projects/labs) is a home for early-stage work: a place to build community, contribution, and momentum. Labs are governed by the [overarching lab charter](https://github.com/LF-Decentralized-Trust-labs/governance/blob/main/lf-decentralized-trust-labs_Charter.pdf).
+
+        Labs stewards review each proposal to make sure it is cogent and novel — in conception, proposed execution, or interested community.
+
+        Filling out this form is the whole submission. It replaces the previous process of forking the labs repository, writing a `[labname].md` proposal, and opening a pull request — you no longer need to do any of that.
+
+        If your work is already mature — with adoption, multiple maintainer organizations, and established governance — you may instead want to propose it as an incubating LFDT project under the [project lifecycle](https://lf-decentralized-trust.github.io/governance/governing-documents/project-lifecycle/). If you aren't sure which fits, propose it as a lab and say so under *Additional Information*; LFDT staff will discuss the options with you.
+
+        > [!IMPORTANT]
+        > A lab can be **a software project**, **a specification**, or **both** — all three are welcome, and you choose under *Technical Activity Type* below.
+        >
+        > **Software:** all code hosted in LFDT Labs must be made available under an **Apache 2.0** license, with [DCO](https://developercertificate.org/) sign-off on all commits.
+        >
+        > **Specifications:** all specification and standards work hosted in LFDT Labs must be done under the **[Community Specification](https://github.com/CommunitySpecification/Community_Specification) (CSL)** framework — the [Community Specification License 1.0](https://github.com/CommunitySpecification/1.0/blob/master/01-community-specification-license-v1.md), its Contributor License Agreement, governance, and code of conduct. There is no alternative specification license option.
+        >
+        > A lab that does both keeps them separate: the code stays under Apache 2.0, the specification under CSL.
+        >
+        > A lab **cannot** be named after a product, a network, or an existing entity — the lab needs its own distinct identity. Before you propose a name, read the [LFDT Naming Guidelines](https://github.com/LF-Decentralized-Trust/wiki/wiki/Naming-Guidelines).
+
+        ### What happens next?
+
+        1. **New Proposal** — you submit this form.
+        2. **Steward Review** — the labs stewards evaluate whether the lab is cogent and novel, and whether LFDT is the right home for it.
+        3. **Approved** - you work with LFDT staff on onboarding: existing asset transfer (if applicable), repository creation or transfer, infrastructure setup, and announcement.
+        4. **Declined** — stewards will explain why, and where the work might fit better.
+
+        The label on this issue tracks where your proposal is in that process: `New Proposal`, `Steward Review`, `Approved`, `Declined`.
+
+        <br />
+
+        ---
+
+        # Section 1: Mission and Scope
+
+  - type: input
+    id: lab-name
+    attributes:
+      label: Lab Name
+      description: |
+        The proposed name of the lab. A lab cannot be named after a product, a network, or an existing entity — it needs its own distinct identity.
+
+        Please follow the [LFDT Naming Guidelines](https://github.com/LF-Decentralized-Trust/wiki/wiki/Naming-Guidelines) before proposing a name, and check that it is not already in use generally or in the decentralized technology space, is clear of trademarks (USPTO, EUIPO, WIPO), has `.org`/`.io` domains available, has no conflicting GitHub presence, and carries no offensive or controversial associations. **Do not purchase domains yourself** — that adds a 90-day transfer delay; LFDT will acquire them. Names are subject to review by LFDT trademark counsel, so it helps to have 3–4 alternates ready; you can list them under *Additional Information*.
+    validations:
+      required: true
+
+  - type: textarea
+    id: short-description
+    attributes:
+      label: Short Description
+      description: "Provide a short description of your lab. This will be used for the GitHub repository's description."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope of Lab
+      description: "Enter the scope of the lab: what it does, its mission, and its origin and history. This should include enough information to allow the labs stewards to understand the work you intend to do."
+    validations:
+      required: true
+
+  - type: textarea
+    id: lfdt-alignment
+    attributes:
+      label: Alignment with LFDT Mission
+      description: "Describe how the lab fits within LFDT's mission and why LFDT is the right home for it."
+    validations:
+      required: true
+
+  - type: textarea
+    id: relation-to-existing
+    attributes:
+      label: Relation to Existing LFDT Labs and Projects
+      description: "Describe how the lab relates to existing LFDT labs and projects — what makes it unique, or what makes it better at solving a problem than what already exists."
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <br />
+
+        ---
+
+        # Section 2: Lab Details
+
+  - type: checkboxes
+    id: activity-type
+    attributes:
+      label: Technical Activity Type
+      description: "What will this lab produce? Check one or both — a lab can be a code project, a specification, or both. Code is licensed under Apache 2.0; specification and standards work is done under the [Community Specification](https://github.com/CommunitySpecification/Community_Specification) (CSL) framework."
+      options:
+        - label: "**Code project** — the lab produces code, licensed under Apache 2.0"
+        - label: "**Specification** — the lab produces a specification, under the Community Specification License 1.0"
+
+  - type: input
+    id: repo-url
+    attributes:
+      label: Pre-existing Repository
+      description: "If you currently have a GitHub repository that you wish to transfer to the LF Decentralized Trust Labs organization, link it here. All commits must be signed off under the DCO; if they are not, you will need to squash the history into a single signed-off commit for the new lab repository. Please refer to the README for additional information on existing repositories."
+      placeholder: "https://github.com/<org>/<repo>"
+    validations:
+      required: false
+
+  - type: textarea
+    id: initial-committers
+    attributes:
+      label: Initial Committers
+      description: |
+        Enter the GitHub IDs for the set of initial committers. Names and affiliations are helpful but optional.
+      placeholder: |
+        - https://github.com/<user_id1>
+        - https://github.com/<user_id2>
+    validations:
+      required: true
+
+  - type: textarea
+    id: sponsor
+    attributes:
+      label: Sponsor
+      description: "A sponsor is optional, but the sponsor must be a maintainer of one of the LF Decentralized Trust projects, a TAC member, a GB member, or a SIG chair. A sponsor helps you make connections within the LFDT community and helps validate that the proposal is cogent and novel. A sponsor has no obligations beyond that initial support."
+      placeholder: "https://github.com/<user_id> or Name (email@example.org) - Role (e.g., \"Chair of the XXX workgroup\")"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: license
+    attributes:
+      label: Licensing
+      description: |
+        A lab can be a software project, a specification, or both. Each carries its own license, and both acknowledgements below apply to every lab regardless of which you selected above.
+
+        **Software:** all code hosted in LFDT Labs must be made available under an [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license, with DCO sign-off on all commits.
+
+        **Specifications:** all specification and standards work must be done under the [Community Specification](https://github.com/CommunitySpecification/Community_Specification) (CSL) framework: the [Community Specification License 1.0](https://github.com/CommunitySpecification/1.0/blob/master/01-community-specification-license-v1.md) plus its [Contributor License Agreement](https://github.com/CommunitySpecification/1.0/blob/master/00-contributor-license-agreement.md), [governance](https://github.com/CommunitySpecification/1.0/blob/master/05-governance.md), and [code of conduct](https://github.com/CommunitySpecification/1.0/blob/master/08-code-of-conduct.md). CSL exists because specifications are blueprints implemented independently in many codebases, so they need patent and copyright grants that reach across those implementations — an open source license alone does not do that. See [getting started](https://github.com/CommunitySpecification/1.0/blob/master/getting-started.md).
+
+        If your code or specification is currently under a different license, note that under *Additional Information* below and we will discuss it with you.
+      options:
+        - label: I understand that all code hosted in LFDT Labs must be made available under an Apache 2.0 license with DCO sign-off.
+          required: true
+        - label: I understand that all specification and standards work in LFDT Labs is done under the Community Specification License 1.0 and the rest of the CSL framework.
+          required: true
+
+  - type: textarea
+    id: governance
+    attributes:
+      label: Governance Model or Practice
+      description: "Link to any documented governance practices, if any (e.g., a GOVERNANCE.md file), or describe how the lab will make decisions."
+    validations:
+      required: false
+
+  - type: textarea
+    id: security
+    attributes:
+      label: Security
+      description: "If the work already has an [OpenSSF Best Practices badge](https://www.bestpractices.dev/), link it here. Otherwise, describe your current security posture (e.g., vulnerability reporting process, dependency scanning, release signing), if any."
+    validations:
+      required: false
+
+  - type: textarea
+    id: infrastructure
+    attributes:
+      label: Infrastructure and Tooling
+      description: "Please describe any infrastructure and tooling you use today and any anticipated needs (CI, build and release tooling, hosting, mailing lists, chat, etc.), if any."
+    validations:
+      required: false
+
+  - type: textarea
+    id: adoption
+    attributes:
+      label: Evidence of Adoption and Use Cases
+      description: "Please provide examples or references of adoption, application, or use cases for your code, specification, or standard, if any."
+    validations:
+      required: false
+
+  - type: textarea
+    id: roadmap
+    attributes:
+      label: Roadmap
+      description: "Link to or provide a 12-month public roadmap for the lab, if available."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        <br />
+
+        ---
+
+        # Section 3: Existing Assets
+
+        Please let us know if you have any other existing assets associated with your code, such as a website, social media account, logo, or a trademark on the name.
+
+  - type: textarea
+    id: name-and-logo
+    attributes:
+      label: Existing Name and Logo
+      description: "Describe any existing name and logo associated with the work, and whether either is trademarked."
+    validations:
+      required: false
+
+  - type: input
+    id: website
+    attributes:
+      label: Website URL
+      description: "List any domains you own, or the URL of the website or documentation portal, if any."
+    validations:
+      required: false
+
+  - type: textarea
+    id: social-media
+    attributes:
+      label: Social Media Accounts
+      description: "Please link to any existing social media accounts, if any."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: trademark
+    attributes:
+      label: Trademark and Accounts Signoff
+      description: "By submitting this issue, you understand that if accepted, all related trademarks such as the lab name and accounts will be donated to LFDT. For more information please refer to Section 9 of the [LFDT Charter](https://www.lfdecentralizedtrust.org/about/charter). If you'd prefer not to transfer the trademarks and accounts, let's have a conversation about coming up with a new name for your lab so that you can retain the existing name and related assets."
+      options:
+        - label: If the lab is accepted, I agree to donate all related trademarks and accounts to the LFDT.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        <br />
+
+        ---
+
+        # Section 4: Contact Information
+
+  - type: textarea
+    id: contact
+    attributes:
+      label: Contact name(s) and email(s)
+      description: "Provide the name(s) and email address(es) of the main point(s) of contact for this lab, so we can follow up about next steps and discuss how LFDT staff can support you. If more than one name and email is provided, please comma separate them. If you prefer not to share your email address on a public document, please provide your LinkedIn profile or an alternative way for us to contact you."
+      placeholder: "Comma-separate multiple contacts here"
+    validations:
+      required: true
+
+  - type: textarea
+    id: signatory
+    attributes:
+      label: Contributing or sponsoring entity signatory information
+      description: "Only needed if you have existing assets — trademarks, domains, or accounts — to contribute. Provide the details of the lab's contributing or sponsoring company/organization or group of individuals. This is the person or people that would sign the Contribution Agreement which assigns those assets to the Linux Foundation."
+      value: "If an organization:\n| Name | Address | Type (e.g., Delaware corporation) | Signatory name and title | Email address |\n|-----------|-----------|-----------|-----------|-----------|\n|            |            |            |            |            |\n\nOr, if an individual or individual(s):\n| Name | Country | Email address |\n|-----------|-----------|-----------|\n|            |            |            |\n|            |            |            |\n|            |            |            |"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: "Any other details the labs stewards should know when reviewing this proposal."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        <br />
