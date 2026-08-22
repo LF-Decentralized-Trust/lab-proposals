@@ -95,14 +95,34 @@ body:
 
         # Section 2: Lab Details
 
-  - type: checkboxes
-    id: activity-type
+  - type: markdown
     attributes:
-      label: Technical Activity Type
-      description: "What will this lab produce? Check one or both — a lab can be a code project, a specification, or both. Code is licensed under Apache 2.0; specification and standards work is done under the [Community Specification](https://github.com/CommunitySpecification/Community_Specification) (CSL) framework."
+      value: |
+        ### Technical Activity Type
+
+        What will this lab produce? Answer both questions — a lab can be a code project, a specification, or both. Code is licensed under Apache 2.0; specification and standards work is done under the [Community Specification](https://github.com/CommunitySpecification/Community_Specification) (CSL) framework.
+
+  - type: dropdown
+    id: activity-code
+    attributes:
+      label: Does this lab produce code?
+      description: "Code hosted in LFDT Labs is licensed under Apache 2.0, with DCO sign-off on all commits."
       options:
-        - label: "**Code project** — the lab produces code, licensed under Apache 2.0"
-        - label: "**Specification** — the lab produces a specification, under the Community Specification License 1.0"
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: activity-spec
+    attributes:
+      label: Does this lab produce a specification?
+      description: "Specification and standards work in LFDT Labs is done under the Community Specification License 1.0 and the rest of the CSL framework."
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
 
   - type: input
     id: repo-url
