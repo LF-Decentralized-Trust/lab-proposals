@@ -3,8 +3,10 @@ name: Lab Proposal
 description: Propose a new lab under LF Decentralized Trust (LFDT) Labs
 title: "[Lab Proposal] <Lab Name>"
 labels: ["New Proposal"]
-# assignees:
-#   - <lfdt-staff-github-handle>
+assignees:
+  - ryjones
+  - christinaharter
+  - davidwboswell
 body:
   - type: markdown
     attributes:
