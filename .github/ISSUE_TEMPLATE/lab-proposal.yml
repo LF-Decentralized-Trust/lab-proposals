@@ -2,7 +2,7 @@
 name: Lab Proposal
 description: Propose a new lab under LF Decentralized Trust (LFDT) Labs
 title: "[Lab Proposal] <Lab Name>"
-labels: ["New Proposal"]
+labels: ["New Proposal", "Steward Review"]
 assignees:
   - ryjones
   - christinaharter
@@ -271,8 +271,8 @@ body:
     id: contact
     attributes:
       label: Contact name(s) and email(s)
-      description: "Provide the name(s) and email address(es) of the main point(s) of contact for this lab, so we can follow up about next steps and discuss how LFDT staff can support you. If more than one name and email is provided, please comma separate them. If you prefer not to share your email address on a public document, please provide your LinkedIn profile or an alternative way for us to contact you."
-      placeholder: "Comma-separate multiple contacts here"
+      description: "Provide the name(s) and email address(es) of the main point(s) of contact for this lab, so we can follow up about next steps and discuss how LFDT staff can support you. List one contact per line. If you prefer not to share your email address on a public document, please provide your LinkedIn profile or an alternative way for us to contact you."
+      placeholder: "One contact per line, e.g.\nRobert Example - robert@example.com\nMaria Example - linkedin.com/in/mariaexample"
     validations:
       required: true
 
