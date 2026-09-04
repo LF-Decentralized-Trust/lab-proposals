@@ -126,12 +126,14 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: repo-url
     attributes:
-      label: Pre-existing Repository
-      description: "If you currently have a GitHub repository that you wish to transfer to the LF Decentralized Trust Labs organization, link it here. All commits must be signed off under the DCO; if they are not, you will need to squash the history into a single signed-off commit for the new lab repository. Please refer to the README for additional information on existing repositories."
-      placeholder: "https://github.com/<org>/<repo>"
+      label: Pre-existing Repositories
+      description: "If you currently have one or more GitHub repositories that you wish to transfer to the LF Decentralized Trust Labs organization, link them here — one per line. All commits must be signed off under the DCO; if they are not, you will need to squash the history into a single signed-off commit for the new lab repository. Please refer to the README for additional information on existing repositories."
+      placeholder: |
+        - https://github.com/<org>/<repo1>
+        - https://github.com/<org>/<repo2>
     validations:
       required: false
 

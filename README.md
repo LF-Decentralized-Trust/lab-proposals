@@ -61,7 +61,7 @@ You can bring an existing repository to LFDT Labs, and there are two ways it can
 - **The code must be relicensable to Apache 2.0.** If contributions came from people whose sign-off you cannot obtain, raise it under _Additional Information_ before you file.
 - **Do not transfer anything yet.** Asset transfer happens during onboarding, after the proposal is approved, coordinated with LFDT staff.
 
-Link the repository in the _Pre-existing Repository_ field so stewards can look at it.
+Link the repository — or repositories, one per line — in the _Pre-existing Repositories_ field so stewards can look at them.
 
 ---
 
@@ -86,7 +86,7 @@ The form has four sections. **Required** fields are marked below; everything els
 | Field | Required | What to put in it |
 | --- | --- | --- |
 | **Technical Activity Type** | ✅ | Check **Code project**, **Specification**, or both. Check at least one — GitHub cannot enforce this for you. |
-| **Pre-existing Repository** | | A link to the repository you want to bring in, if any. See [If you have an existing repository](#if-you-have-an-existing-repository). |
+| **Pre-existing Repositories** | | Links to any repositories you want to bring in, one per line. See [If you have an existing repository](#if-you-have-an-existing-repository). |
 | **Initial Committers** | ✅ | GitHub IDs as URLs, one per line. Names and affiliations are helpful but optional. |
 | **Sponsor** | | Optional. A sponsor must be a maintainer of an LFDT project, a TAC member, a GB member, or a SIG chair. They help you make connections in the community and help validate that the proposal is cogent and novel — no obligations beyond that initial support. |
 | **Licensing** | ✅ | Two acknowledgement checkboxes, both required for every lab regardless of activity type. |
