@@ -1,37 +1,72 @@
 ---
-name: Lab onboarding for labs
-about: Create a checklist of tasks for a lab to complete the onboarding process
-title: "[LAB ONBOARDING] LAB NAME"
-labels: lab onboarding
-assignees: ryjones, jwagantall, davidwboswell
----
+name: Lab Onboarding
+description: Create a checklist of tasks for a lab to complete the onboarding process
+title: "[Lab Onboarding] <Lab Name>"
+labels: ["Lab Onboarding"]
+assignees:
+  - ryjones
+  - jwagantall
+  - davidwboswell
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > This checklist lists the tasks maintainers need to complete to onboard a new lab to [LF Decentralized Trust](https://www.lfdecentralizedtrust.org/). LFDT staff are here and happy to help with all of them.
 
-This document lists tasks that maintainers need to do to onboard a new lab to LFDT.  LFDT staff are here and happy to help with these.
+        Many tasks depend on having a lab name picked out, so sorting out branding should be your first priority.
 
-### Marketing tasks:
+        Check items off as you complete them. If a task doesn't apply to your lab, leave a comment on this issue explaining why.
 
-Note that many tasks require having a lab name picked out, so sorting out branding should be a priority.
+  - type: input
+    id: lab-name
+    attributes:
+      label: Lab Name
+      description: The name of the lab being onboarded. If the name is not settled yet, put the working name here and update it once it is.
+    validations:
+      required: true
 
-- [ ] Pick a name for the lab – see our [Naming Guidelines](https://github.com/LF-Decentralized-Trust/wiki/wiki/Naming-Guidelines) for guidance
-- [ ] Pick a logo for the lab – you can work with our Marketing Lead on this or design a logo with your own designers. Note that if you design the logo you’ll need to sign a document to transfer the logo to the Linux Foundation so that we can file a trademark application for it.
-- [ ] Work with LFDT staff to pick a preferred lab announcement date
-- [ ] Draft a blog post announcing your lab and describe what the lab is, why it is being open source and how people can get involved
-  - [ ] **Optional:** We recommend that lab maintainers plan for an introductory virtual meetup a few weeks after the announcement.
+  - type: checkboxes
+    id: marketing
+    attributes:
+      label: Marketing tasks
+      options:
+        - label: Pick a name for the lab — see our [Naming Guidelines](https://github.com/LF-Decentralized-Trust/wiki/wiki/Naming-Guidelines) for guidance
+        - label: Pick a logo for the lab — you can work with our Marketing Lead on this or design a logo with your own designers. Note that if you design the logo you'll need to sign a document to transfer the logo to the Linux Foundation so that we can file a trademark application for it.
+        - label: Work with LFDT staff to pick a preferred lab announcement date
+        - label: Draft a blog post announcing your lab, describing what the lab is, why it is being open sourced, and how people can get involved
+        - label: "**Optional:** plan an introductory virtual meetup a few weeks after the announcement — we recommend it."
 
-### Infrastructure Tasks:
+  - type: checkboxes
+    id: infrastructure
+    attributes:
+      label: Infrastructure tasks
+      options:
+        - label: Work with LFDT staff to move your lab to an LFDT hosted GitHub organization
+        - label: Review the [TAC's guidance on GitHub best practices](https://lf-decentralized-trust.github.io/governance/guidelines/) to follow
+        - label: Review the [repository structure](https://lf-decentralized-trust.github.io/governance/governing-documents/repository-structure/) documentation
+        - label: Work with LFDT staff to set up Discord channel(s) and public lab calls
+        - label: "**Optional:** set up a mailing list for the lab. Most labs don't use mailing lists, but this is available if you're interested."
 
-- [ ] Work with LFDT staff to move your lab to a LFDT hosted Github organization.
-  - [ ] Review [TAC’s guidance on Github best](https://lf-decentralized-trust.github.io/governance/guidelines/) practices to follow
-  - [ ] Review [repository structure](https://lf-decentralized-trust.github.io/governance/governing-documents/repository-structure/) documentation
-- [ ] Work with LFDT staff to set up Discord channel(s) and public lab calls
-  - [ ] **Optional:** Set up a mailing list for the lab. Most labs don’t use mailing lists, but this is available if you’re interested
+  - type: checkboxes
+    id: governance
+    attributes:
+      label: Governance tasks
+      options:
+        - label: Review the [overarching lab charter](https://github.com/LF-Decentralized-Trust-labs/governance/blob/main/lf-decentralized-trust-labs_Charter.pdf) and propose any edits for LFDT staff to review and approve
+        - label: Deal with any other agreements as needed — some labs need a Contribution Agreement or Logo Transfer if they are contributing a previously held name and/or logo for the lab
+        - label: Note that there will be quarterly reports to be filed with the Technical Advisory Council, the group that provides oversight for all LFDT labs. Details about quarterly and annual reports are at [lab updates](https://lf-decentralized-trust.github.io/governance/lab-updates/).
 
-### Governance Tasks:
+  - type: checkboxes
+    id: community-engagement
+    attributes:
+      label: Community engagement tasks
+      options:
+        - label: Work with staff on a community engagement plan. Review the [Raising the Profile of Your Lab](https://docs.google.com/presentation/d/13nji_R-op77ERT-AV3-CbOOZwAOjtvq33RRGnjpL3Gc/edit#slide=id.g389f50bd17_0_59) presentation for examples of activities we can help you with to bring more users and contributors into your lab.
 
-- [ ] Review [draft lab charter](LINK) and propose any edits for LFDT staff to review and approve
-- [ ] Deal with any other agreements as needed – some labs need a Contribution Agreement or Logo Transfer if they are contributing a previously held name and/or logo for the lab
-- [ ] Note that there will be quarterly reports to be filed with the Technical Advisory Council, the group that provides oversight for all LFDT labs. Details about quarterly and annual reports are at: [https://lf-decentralized-trust.github.io/governance/lab-updates/](https://lf-decentralized-trust.github.io/governance/lab-updates/)
-
-### Community Engagement Tasks:
-
-- [ ] Work with staff on a community engagement plan. Review the [Raising the Profile of Your Lab or Lab presentation](https://docs.google.com/presentation/d/13nji_R-op77ERT-AV3-CbOOZwAOjtvq33RRGnjpL3Gc/edit#slide=id.g389f50bd17_0_59) for examples of activities we can help you with to bring more users and contributors into your lab.tab=t.0)
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Anything else LFDT staff should know, or any onboarding task specific to this lab that is not covered above.
+    validations:
+      required: false
