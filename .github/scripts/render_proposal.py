@@ -1,60 +1,81 @@
 #!/usr/bin/env python3
-"""Render a parsed Lab Proposal issue form into proposals/<slug>.md.
+"""Render a Lab Proposal issue body into proposals/<slug>.md.
 
-Reads the JSON emitted by stefanbuck/github-issue-parser from $ISSUE_JSON
-(keys are the form field ids) and writes the markdown file. Emits
-``lab_name`` and ``path`` as step outputs.
+Reads the issue body from $ISSUE_BODY and splits it on the ``### <label>``
+headings that GitHub issue forms produce. Hand-written issues that copy the
+form's headings work too: a blank line after the heading is optional, and
+stray ``#``/``##`` headings and ``---`` rules between fields are ignored.
+Emits ``lab_name`` and ``path`` as step outputs.
 """
 
-import json
 import os
 import re
 import sys
 from pathlib import Path
 
-# (field id, heading) in the order they appear in the form. Fields with an
-# empty value are skipped so the file only carries what the proposer filled in.
+# (heading, [aliases]) in form order. Aliases cover older hand-written
+# proposals whose headings differ slightly from the form.
 SECTIONS = [
     ("Section 1: Mission and Scope", [
-        ("short-description", "Short Description"),
-        ("scope", "Scope of Lab"),
-        ("lfdt-alignment", "Alignment with LFDT Mission"),
-        ("relation-to-existing", "Relation to Existing LFDT Labs and Projects"),
+        ("Short Description", []),
+        ("Scope of Lab", []),
+        ("Alignment with LFDT Mission", []),
+        ("Relation to Existing LFDT Labs and Projects", []),
     ]),
     ("Section 2: Lab Details", [
-        ("activity-code", "Does this lab produce code?"),
-        ("activity-spec", "Does this lab produce a specification?"),
-        ("repo-url", "Pre-existing Repositories"),
-        ("initial-committers", "Initial Committers"),
-        ("sponsor", "Sponsor"),
-        ("license", "Licensing"),
-        ("governance", "Governance Model or Practice"),
-        ("security", "Security"),
-        ("infrastructure", "Infrastructure and Tooling"),
-        ("adoption", "Evidence of Adoption and Use Cases"),
-        ("roadmap", "Roadmap"),
+        ("Does this lab produce code?", []),
+        ("Does this lab produce a specification?", []),
+        ("Pre-existing Repositories", ["Pre-existing Repository"]),
+        ("Initial Committers", []),
+        ("Sponsor", []),
+        ("Licensing", []),
+        ("Governance Model or Practice", []),
+        ("Security", []),
+        ("Infrastructure and Tooling", []),
+        ("Evidence of Adoption and Use Cases", []),
+        ("Roadmap", []),
     ]),
     ("Section 3: Existing Assets", [
-        ("name-and-logo", "Existing Name and Logo"),
-        ("website", "Website URL"),
-        ("social-media", "Social Media Accounts"),
-        ("trademark", "Trademark and Accounts Signoff"),
+        ("Existing Name and Logo", []),
+        ("Website URL", []),
+        ("Social Media Accounts", []),
+        ("Trademark and Accounts Signoff", []),
     ]),
     ("Section 4: Contact Information", [
-        ("contact", "Contact name(s) and email(s)"),
-        ("signatory", "Contributing or sponsoring entity signatory information"),
-        ("additional-info", "Additional Information"),
+        ("Contact name(s) and email(s)", []),
+        ("Contributing or sponsoring entity signatory information", []),
+        ("Additional Information", []),
     ]),
 ]
 
+HEADING = re.compile(r"^###\s+(.+?)\s*$")
+NOISE = re.compile(r"^(#{1,2}\s|---\s*$)")
 
-def clean(value):
-    if value is None:
-        return ""
-    if isinstance(value, list):
-        return "\n".join(f"- {v}" for v in value)
-    value = str(value).strip()
-    return "" if value == "_No response_" else value
+
+def norm(text):
+    return re.sub(r"\s+", " ", text.strip().lower())
+
+
+def parse(body):
+    """Return {normalised heading: value} for every ### heading in the body."""
+    fields = {}
+    current = None
+    for line in body.splitlines():
+        m = HEADING.match(line)
+        if m:
+            current = norm(m.group(1))
+            fields[current] = []
+        elif current is not None:
+            fields[current].append(line.rstrip())
+    out = {}
+    for key, lines in fields.items():
+        while lines and (not lines[-1].strip() or NOISE.match(lines[-1])):
+            lines.pop()
+        while lines and not lines[0].strip():
+            lines.pop(0)
+        value = "\n".join(lines).strip()
+        out[key] = "" if value == "_No response_" else value
+    return out
 
 
 def slugify(name):
@@ -63,29 +84,38 @@ def slugify(name):
 
 
 def main():
-    form = json.loads(os.environ["ISSUE_JSON"])
-    lab_name = clean(form.get("lab-name"))
+    fields = parse(os.environ["ISSUE_BODY"])
+    lab_name = fields.get(norm("Lab Name"), "")
     if not lab_name:
-        sys.exit("lab-name is empty; refusing to render")
+        sys.exit("Lab Name is empty or missing; refusing to render")
 
     issue_number = os.environ["ISSUE_NUMBER"]
     issue_url = os.environ["ISSUE_URL"]
     author = os.environ["ISSUE_AUTHOR"]
 
+    used = {norm("Lab Name")}
     lines = [
         f"# {lab_name}",
         "",
         f"Proposed in [#{issue_number}]({issue_url}) by @{author}.",
         "",
     ]
-    for section, fields in SECTIONS:
+    for section, headings in SECTIONS:
         body = []
-        for field_id, heading in fields:
-            value = clean(form.get(field_id))
-            if value:
-                body += [f"### {heading}", "", value, ""]
+        for heading, aliases in headings:
+            for candidate in [heading] + aliases:
+                key = norm(candidate)
+                if key in fields:
+                    used.add(key)
+                    if fields[key]:
+                        body += [f"### {heading}", "", fields[key], ""]
+                    break
         if body:
             lines += [f"## {section}", ""] + body
+
+    for key in fields:
+        if key not in used:
+            print(f"::warning::ignored unknown heading '{key}'")
 
     path = Path("proposals") / f"{slugify(lab_name)}.md"
     path.parent.mkdir(exist_ok=True)
