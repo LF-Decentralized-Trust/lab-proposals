@@ -1,0 +1,104 @@
+# Turns a submitted Lab Proposal issue into a pull request that adds
+# proposals/<lab-name>.md, so stewards can review the proposal as a diff.
+#
+# Two ways in:
+#   - issues:opened  — automatic, for issues labeled "New Proposal". DISABLED
+#     until the repository variable PROPOSAL_PR_ENABLED is set to "true"
+#     (Settings > Secrets and variables > Actions > Variables).
+#   - workflow_dispatch — manual, takes an issue number and opens a *draft* PR.
+#     Always available; use it to try the pipeline on an existing issue.
+name: Proposal to PR
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue number of the Lab Proposal to render
+        required: true
+        type: number
+
+permissions: {}
+
+jobs:
+  proposal-to-pr:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+          (vars.PROPOSAL_PR_ENABLED == 'true' && contains(github.event.issue.labels.*.name, 'New Proposal')) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Resolve issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_ISSUE: ${{ inputs.issue }}
+          EVENT_ISSUE: ${{ github.event.issue.number }}
+        run: |
+          if [ "$EVENT_NAME" = workflow_dispatch ]; then number="$INPUT_ISSUE"; else number="$EVENT_ISSUE"; fi
+          gh issue view "$number" --repo "$GITHUB_REPOSITORY" --json number,url,author,body > issue.json
+          {
+            echo "number=$(jq -r .number issue.json)"
+            echo "url=$(jq -r .url issue.json)"
+            echo "author=$(jq -r .author.login issue.json)"
+            echo "body<<ISSUE_BODY_EOF"
+            jq -r .body issue.json
+            echo "ISSUE_BODY_EOF"
+          } >> "$GITHUB_OUTPUT"
+          rm issue.json
+
+      - name: Parse issue form
+        id: parse
+        uses: stefanbuck/github-issue-parser@cb6e97157cbf851e3a393ff8d57c93a484cc323f # v3.2.5
+        with:
+          template-path: .github/ISSUE_TEMPLATE/lab-proposal.yml
+          issue-body: ${{ steps.issue.outputs.body }}
+
+      - name: Render proposals/<name>.md
+        id: render
+        env:
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+          ISSUE_NUMBER: ${{ steps.issue.outputs.number }}
+          ISSUE_URL: ${{ steps.issue.outputs.url }}
+          ISSUE_AUTHOR: ${{ steps.issue.outputs.author }}
+        run: python3 .github/scripts/render_proposal.py
+
+      - name: Open pull request
+        id: pr
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          branch: proposal/issue-${{ steps.issue.outputs.number }}
+          delete-branch: true
+          signoff: true
+          draft: ${{ github.event_name == 'workflow_dispatch' }}
+          add-paths: proposals/
+          commit-message: |
+            Add proposal: ${{ steps.render.outputs.lab_name }}
+
+            Generated from #${{ steps.issue.outputs.number }}
+          title: "[Lab Proposal] ${{ steps.render.outputs.lab_name }}"
+          labels: New Proposal
+          body: |
+            Generated from ${{ steps.issue.outputs.url }}, filed by @${{ steps.issue.outputs.author }}.
+
+            This PR adds `${{ steps.render.outputs.path }}` rendered from the issue form so stewards can review it as a diff. Review discussion belongs on the issue; merge this PR when the proposal is approved.
+
+      - name: Link the PR from the issue
+        if: ${{ steps.pr.outputs.pull-request-operation == 'created' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ steps.issue.outputs.number }}
+          PR_URL: ${{ steps.pr.outputs.pull-request-url }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --body "A review copy of this proposal has been opened as $PR_URL. Discussion stays here; the PR is merged when the proposal is approved."
