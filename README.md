@@ -67,7 +67,7 @@ Link the repository — or repositories, one per line — in the _Pre-existing R
 
 ## Filing the proposal
 
-[Open a Lab Proposal issue](../../issues/new?template=lab-proposal.yml) and fill out the form. The issue title is prefilled as `[Lab Proposal] <Lab Name>` — replace `<Lab Name>` with your proposed name. The issue is labeled `New Proposal` automatically.
+[Open a Lab Proposal issue](../../issues/new?template=lab-proposal.yml) and fill out the form. The issue title is prefilled as `[Lab Proposal] <Lab Name>` — replace `<Lab Name>` with your proposed name. The issue is labeled `New Proposal` automatically, and that label triggers a pull request that renders your proposal as `proposals/<lab-name>.md` for voting and comments — see [What happens next](#what-happens-next).
 
 The form has four sections. **Required** fields are marked below; everything else is optional, and "we don't have that yet" is a perfectly good answer for an early-stage lab — leave it blank rather than inventing something.
 
@@ -128,14 +128,24 @@ The issue label tracks where your proposal stands, so you can see its status at 
 
 | Label | Meaning |
 | --- | --- |
-| `New Proposal` | You submitted the form. Applied automatically. |
+| `New Proposal` | You submitted the form. Applied automatically, and triggers the review pull request described below. |
 | `Steward Review` | The labs stewards are evaluating whether the lab is cogent and novel, and whether LFDT is the right home for it. |
 | `Approved` | You work with LFDT staff on onboarding: existing asset transfer (if applicable), repository creation or transfer, infrastructure setup, and announcement. |
 | `Declined` | Stewards will explain why, and where the work might fit better. |
 
+### The review pull request
+
+When your issue is filed with the `New Proposal` label, a workflow renders the form into `proposals/<lab-name>.md` and opens a pull request from it, then links the PR from your issue. You do not need to do anything to make this happen, and you should not open a PR of your own.
+
+The pull request is where the proposal gets **voted on and commented on**: stewards can approve or request changes on it, and anyone can leave line-by-line comments on the rendered text. Merging the PR records the proposal as approved, so it stays open until the stewards reach a decision.
+
+If you need to change the proposal, edit the issue body rather than the PR — the file is generated from the issue. Re-adding the `New Proposal` label to the issue regenerates it and updates the PR.
+
+### Stewards' review
+
 Stewards review each proposal to make sure it is **cogent** — clear enough to understand what you intend to build — and **novel** in its conception, its proposed execution, or its interested community.
 
-Review happens in the open, in the issue. Stewards may ask questions there; **answer in the comments rather than editing the issue body**, so the discussion stays readable. If you need to correct a field, edit it and leave a comment saying what changed.
+Review happens in the open, in the issue and on the pull request. Stewards may ask questions there; **answer in the comments rather than editing the issue body**, so the discussion stays readable. If you need to correct a field, edit it and leave a comment saying what changed.
 
 There is no fixed SLA. If a proposal has gone quiet, a polite comment on the issue is the right nudge.
 

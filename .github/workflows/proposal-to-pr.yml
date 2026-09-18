@@ -1,17 +1,20 @@
 # Turns a submitted Lab Proposal issue into a pull request that adds
 # proposals/<lab-name>.md, so stewards can review the proposal as a diff.
 #
+# The workflow only acts on issues that carry the "New Proposal" label.
+#
 # Two ways in:
-#   - issues:opened  — automatic, for issues labeled "New Proposal". DISABLED
-#     until the repository variable PROPOSAL_PR_ENABLED is set to "true"
-#     (Settings > Secrets and variables > Actions > Variables).
+#   - issues:opened / issues:labeled — automatic. Runs when a "New Proposal"
+#     issue is opened (the form applies the label) or when the label is added
+#     to an existing issue.
 #   - workflow_dispatch — manual, takes an issue number and opens a *draft* PR.
-#     Always available; use it to try the pipeline on an existing issue.
+#     Use it to re-run the pipeline on an existing "New Proposal" issue; it
+#     refuses issues without the label.
 name: Proposal to PR
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
   workflow_dispatch:
     inputs:
       issue:
@@ -21,11 +24,19 @@ on:
 
 permissions: {}
 
+# The form applies the label at creation, so one issue can fire both an
+# "opened" and a "labeled" run; serialise them so they do not race on the
+# proposal branch. The second run finds nothing new to push.
+concurrency:
+  group: proposal-${{ github.event.issue.number || inputs.issue }}
+  cancel-in-progress: false
+
 jobs:
   proposal-to-pr:
     if: >-
       ${{ github.event_name == 'workflow_dispatch' ||
-          (vars.PROPOSAL_PR_ENABLED == 'true' && contains(github.event.issue.labels.*.name, 'New Proposal')) }}
+          (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'New Proposal')) ||
+          (github.event.action == 'labeled' && github.event.label.name == 'New Proposal') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -46,7 +57,11 @@ jobs:
           EVENT_ISSUE: ${{ github.event.issue.number }}
         run: |
           if [ "$EVENT_NAME" = workflow_dispatch ]; then number="$INPUT_ISSUE"; else number="$EVENT_ISSUE"; fi
-          gh issue view "$number" --repo "$GITHUB_REPOSITORY" --json number,url,author,body > issue.json
+          gh issue view "$number" --repo "$GITHUB_REPOSITORY" --json number,url,author,body,labels > issue.json
+          if ! jq -e '.labels | map(.name) | index("New Proposal")' issue.json > /dev/null; then
+            echo "::error::Issue #$number is not labeled 'New Proposal'; nothing to do."
+            exit 1
+          fi
           {
             echo "number=$(jq -r .number issue.json)"
             echo "url=$(jq -r .url issue.json)"
