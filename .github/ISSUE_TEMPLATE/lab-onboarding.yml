@@ -25,13 +25,22 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: related-issue
+    attributes:
+      label: Related Issue or Pull Request
+      description: |
+        A reference to the lab proposal this onboarding follows from — the issue or pull request in this repository, or a link to one elsewhere. Use `#123` for an issue or pull request in this repository, `owner/repo#123` for one in another repository, or paste the full URL.
+      placeholder: "#123"
+    validations:
+      required: false
+
   - type: checkboxes
     id: marketing
     attributes:
       label: Marketing tasks
       options:
         - label: Pick a name for the lab — see our [Naming Guidelines](https://github.com/LF-Decentralized-Trust/wiki/wiki/Naming-Guidelines) for guidance
-        - label: Pick a logo for the lab — you can work with our Marketing Lead on this or design a logo with your own designers. Note that if you design the logo you'll need to sign a document to transfer the logo to the Linux Foundation so that we can file a trademark application for it.
         - label: Work with LFDT staff to pick a preferred lab announcement date
         - label: Draft a blog post announcing your lab, describing what the lab is, why it is being open sourced, and how people can get involved
         - label: "**Optional:** plan an introductory virtual meetup a few weeks after the announcement — we recommend it."
