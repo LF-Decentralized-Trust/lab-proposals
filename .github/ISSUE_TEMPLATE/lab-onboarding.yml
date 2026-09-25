@@ -50,6 +50,7 @@ body:
     attributes:
       label: Infrastructure tasks
       options:
+        - label: Add proposal to https://github.com/LF-Decentralized-Trust-labs/LF-Decentralized-Trust-labs.github.io
         - label: Work with LFDT staff to move your lab to an LFDT hosted GitHub organization
         - label: Review the [TAC's guidance on GitHub best practices](https://lf-decentralized-trust.github.io/governance/guidelines/) to follow
         - label: Review the [repository structure](https://lf-decentralized-trust.github.io/governance/governing-documents/repository-structure/) documentation
