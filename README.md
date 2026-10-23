@@ -139,6 +139,8 @@ When your issue is filed with the `New Proposal` label, a workflow renders the f
 
 The pull request is where the proposal gets **voted on and commented on**: stewards can approve or request changes on it, and anyone can leave line-by-line comments on the rendered text. Merging the PR records the proposal as approved, so it stays open until the stewards reach a decision.
 
+A proposal PR can only be merged once **two members of the TAC or lab stewards teams have approved it** (both from the same team is fine). The `steward-approvals` check on the PR shows how many qualifying approvals it has.
+
 If you need to change the proposal, edit the issue body rather than the PR — the file is generated from the issue. Re-adding the `New Proposal` label to the issue regenerates it and updates the PR.
 
 ### Stewards' review

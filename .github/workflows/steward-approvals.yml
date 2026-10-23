@@ -1,0 +1,92 @@
+# Required status check: a pull request may only merge once at least two
+# distinct members of the TAC and/or lab stewards teams have approved it.
+# Two approvals from the same team are fine; approvals from anyone outside
+# those teams (including LFDT staff) do not count.
+#
+# GitHub rulesets can require N approvals but cannot say *whose* approvals
+# count, so this check does the counting and the ruleset in
+# .github/rulesets/main.json requires it to pass.
+#
+# Team membership is read with the STEWARD_TEAMS_TOKEN repository secret: a
+# fine-grained personal access token (resource owner LF-Decentralized-Trust,
+# organization permission "Members: read-only", no repository access) minted
+# as the lfdt-bot account. The default GITHUB_TOKEN cannot list organization
+# team members. Without the secret the check fails rather than passes.
+name: Steward approvals
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+
+permissions: {}
+
+concurrency:
+  group: steward-approvals-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  steward-approvals:
+    name: steward-approvals
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Count approvals from TAC and lab stewards members
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEAM_TOKEN: ${{ secrets.STEWARD_TEAMS_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          TEAMS: tac lab-stewards
+          REQUIRED: 2
+        run: |
+          set -euo pipefail
+          org="${GITHUB_REPOSITORY%%/*}"
+
+          if [ -z "$TEAM_TOKEN" ]; then
+            echo "::error::STEWARD_TEAMS_TOKEN is not available, so team membership cannot be checked. Pull requests from forks never receive it."
+            exit 1
+          fi
+
+          : > members.txt
+          for team in $TEAMS; do
+            GH_TOKEN="$TEAM_TOKEN" gh api "orgs/$org/teams/$team/members" --paginate \
+              --jq '.[].login' >> members.txt
+          done
+          sort -u -o members.txt members.txt
+          echo "Eligible reviewers ($TEAMS): $(tr '\n' ' ' < members.txt)"
+
+          # Latest non-comment review per user; only a final state of APPROVED
+          # counts. The ruleset dismisses stale approvals on push, so a review
+          # left on an older commit shows up here as DISMISSED.
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/reviews" --paginate \
+            --jq '.[] | select(.state != "COMMENTED" and .state != "PENDING") | [.user.login, .state] | @tsv' \
+            | awk -F'\t' '{ state[$1] = $2 } END { for (u in state) if (state[u] == "APPROVED") print u }' \
+            | sort > approvers.txt
+          grep -Fxf members.txt approvers.txt > steward-approvers.txt || true
+          count=$(wc -l < steward-approvers.txt | tr -d ' ')
+
+          {
+            echo "## Steward approvals"
+            echo
+            echo "Approvals from TAC / lab stewards members: **$count** of **$REQUIRED** required."
+            echo
+            if [ "$count" -gt 0 ]; then
+              sed 's/^/- @/' steward-approvers.txt
+              echo
+            fi
+            other=$(grep -Fvxf members.txt approvers.txt || true)
+            if [ -n "$other" ]; then
+              echo "Approvals that do not count (not TAC or lab stewards members):"
+              echo
+              printf '%s\n' "$other" | sed 's/^/- @/'
+              echo
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$count" -lt "$REQUIRED" ]; then
+            echo "::error::$count of $REQUIRED required approvals from TAC / lab stewards members. Approved so far: $(tr '\n' ' ' < steward-approvers.txt)"
+            exit 1
+          fi
+          echo "::notice::$count approvals from TAC / lab stewards members: $(tr '\n' ' ' < steward-approvers.txt)"
